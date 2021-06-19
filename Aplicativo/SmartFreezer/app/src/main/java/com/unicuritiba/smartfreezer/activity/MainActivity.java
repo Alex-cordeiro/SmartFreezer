@@ -40,24 +40,17 @@ public class MainActivity extends AppCompatActivity implements IBluetoothConecti
     BluetoothAdapter Meubluetoothadaptador = null;
     RecyclerView recyclerViewDispositivos;
     private List<BluetoothDevicePaired> listaDispositivos = new ArrayList<>();
-
-
-
-
-
-
+    private List<BluetoothDevicePaired> listaRecebidaDispositivos = new ArrayList<>();
     //Metodos da activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         AtivaBluetooth();
-        BuscaDispositivosDisponiveis();
-        inicializaRecyclerView();
-    }
 
+    }
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode){
             case REQUISICAO_ATIVACAO_BLUETOOTH:
@@ -71,6 +64,14 @@ public class MainActivity extends AppCompatActivity implements IBluetoothConecti
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        listaRecebidaDispositivos = BuscaDispositivosDisponiveis();
+        inicializaRecyclerView(listaRecebidaDispositivos);
+    }
+
+    //metódos particulares
     public void AtivaBluetooth(){
         Meubluetoothadaptador = BluetoothAdapter.getDefaultAdapter();
         if(Meubluetoothadaptador == null){
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements IBluetoothConecti
         }
     }
 
-    public void BuscaDispositivosDisponiveis(){
+    public List<BluetoothDevicePaired> BuscaDispositivosDisponiveis(){
         Set<BluetoothDevice> dispositivosPareados = Meubluetoothadaptador.getBondedDevices();
         if(dispositivosPareados.size() > 0){
             //Obtendo o nome e endereço MAC dos dispositivos
@@ -95,9 +96,10 @@ public class MainActivity extends AppCompatActivity implements IBluetoothConecti
                 listaDispositivos.add(devicePaired);
             }
         }
+        return listaDispositivos;
     }
 
-    public void inicializaRecyclerView(){
+    public void inicializaRecyclerView(List<BluetoothDevicePaired> listaDispositivos){
         recyclerViewDispositivos = findViewById(R.id.recyclerDispositivos);
         AdapterRecyclerViewDispositivos adapterDispositivos = new AdapterRecyclerViewDispositivos(listaDispositivos);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());

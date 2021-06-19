@@ -13,8 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartFreezer">
-        <activity android:name=".activity.ConexaoActivity"></activity>
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.MainActivity"></activity>
+        <activity android:name=".activity.ConexaoActivity" />
+        <activity android:name=".activity.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
